@@ -14,7 +14,7 @@
 #include <string>
 #include <unordered_set>
 
-std::string kYourName = "STUDENT TODO"; // Don't forget to change this!
+std::string kYourName = "Elton Manchester";
 
 /**
  * Takes in a file name and returns a set containing all of the applicant names as a set.
@@ -28,7 +28,28 @@ std::string kYourName = "STUDENT TODO"; // Don't forget to change this!
  * to also change the corresponding functions in `utils.h`.
  */
 std::set<std::string> get_applicants(std::string filename) {
-  // STUDENT TODO: Implement this function.
+  std::set<std::string> applicants;
+  std::ifstream app_file(filename);
+  if (app_file.is_open()) {
+    std::string applicant;
+    while(getline(app_file, applicant)) {
+      applicants.insert(applicant);
+    }
+  } else {
+    std::cerr << "Could not open file: " << filename << std::endl;
+  }
+  return applicants;
+}
+
+/**
+ * Takes in a name and returns the initials of that name.
+ * Assumes a first and last name with a space between.
+ */
+std::string initials(std::string name) {
+  std::string initials;
+  initials += name[0];
+  initials += name[name.find(' ') + 1];
+  return initials;
 }
 
 /**
@@ -40,7 +61,14 @@ std::set<std::string> get_applicants(std::string filename) {
  * @return          A queue containing pointers to each matching name.
  */
 std::queue<const std::string*> find_matches(std::string name, std::set<std::string>& students) {
-  // STUDENT TODO: Implement this function.
+  std::queue<const std::string*> matches;
+  std::string name_initials = initials(name);
+  for (auto it = students.begin(); it != students.end(); ++it) {
+    if (initials(*it) == name_initials) {
+      matches.push(&(*it));
+    }
+  }
+  return matches;
 }
 
 /**
@@ -54,7 +82,20 @@ std::queue<const std::string*> find_matches(std::string name, std::set<std::stri
  *                Will return "NO MATCHES FOUND." if `matches` is empty.
  */
 std::string get_match(std::queue<const std::string*>& matches) {
-  // STUDENT TODO: Implement this function.
+  if (matches.size() == 0) return "NO MATCHES FOUND.";
+  int min_diff = INT_MAX;
+  std::string closest_match;
+  while (!matches.empty()) {
+    std::string match = *matches.front();
+    matches.pop();
+    // Clearly, similarity to my own name is the best metric
+    int diff = std::abs(kYourName.compare(match));
+    if (diff < min_diff) {
+      min_diff = diff;
+      closest_match = match;
+    }
+  }
+  return closest_match;
 }
 
 /* #### Please don't remove this line! #### */

@@ -5,7 +5,18 @@ Marriage Pact
 -------------
 
 Q1. It is your choice to use either an ordered or unordered set. In a few sentences, what are some of the tradeoffs between the two? Additionally, please give an example (that has not been shown in lecture) of a valid hash function that could be used to hash student names for an unordered set.
-A1. TODO
+A1. 
+ordered set: O(log N) insert and random access, in-order traversal.
+unordered set: O(1) insert and random access, no in-order traversal.
+
+We aren't doing any random access, so the unordered set is preferable in terms of construction time.
+However, in-order traversal allows us to stop once we pass the target initials alphabetically.
+Since we will likely only need to construct the name set once, ordered set would be preferable due
+to the better performance in find_matches().
 
 Q2. Note that we are saving pointers to names in the queue, not names themselves. Why might this be desired in this problem? What happens if the original set where the names are stored goes out of scope and the pointers are referenced?
-A2. TODO
+A2.
+Using pointers prevents us from copying strings. Since all we are doing is looking at the names,
+we don't need to make copies of the elements. If the original set went out of scope, the memory
+would be freed and we would no longer be able to access the elements. However, from the use case
+of the function, this should not be an issue.
